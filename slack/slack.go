@@ -54,6 +54,9 @@ func (sl *Slack) Listen(ctx context.Context) (<-chan snowman.Msg, error) {
 }
 
 func (sl *Slack) Say(ctx context.Context, user snowman.User, msg snowman.Msg) error {
+	if smsg, ok := msg.Attribs["slack_msg"].(slack.Msg); ok {
+		sl.SendMessage(msg.Body, smsg)
+	}
 	return nil
 }
 
