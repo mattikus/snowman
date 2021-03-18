@@ -99,7 +99,7 @@ func (sl *Slack) handleEvent(ctx context.Context, re slack.RTMEvent, out chan<- 
 
 	ev, ok := re.Data.(*slack.MessageEvent)
 	if !ok {
-		sl.Warnf("ignoring unknown event (type=%v)", reflect.TypeOf(re.Data))
+		sl.Debugf("ignoring unknown event (type=%v)", reflect.TypeOf(re.Data))
 		return
 	}
 
@@ -145,10 +145,9 @@ func (sl *Slack) stripAtAddress(ev *slack.MessageEvent) bool {
 		AddressUser(sl.self.ID, sl.self.Name),
 	}
 
-	msgText := ev.Msg.Text
 	for _, prefix := range prefixes {
 		if strings.HasPrefix(ev.Msg.Text, prefix) {
-			msgText = strings.TrimSpace(strings.Replace(ev.Msg.Text, prefix, "", -1))
+			msgText := strings.TrimSpace(strings.Replace(ev.Msg.Text, prefix, "", -1))
 			ev.Text = msgText
 			return true
 		}
